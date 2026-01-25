@@ -1,14 +1,99 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id          String   @id @default(cuid())
+  email       String   @unique
+  first_name  String
+  last_name   String?
+  avatar_url  String?
+  role        Role     @default(USER)
+
+  settings    Json     @default("{}")
+
+  accounts    Account[]
+  wishlists   Wishlist[]
+  
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model Account {
+  id                  String  @id @default(cuid())
+  user_id             String
+  type                String  // "oauth" or "credentials"
+  provider            String  // "google", "apple", "local"
+  provider_account_id String  // Google/Apple ID
+  
+  password_hash       String? 
+
+  user                User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([provider, provider_account_id])
+}
+
+model Wishlist {
+  id          String    @id @default(cuid())
+  user_id     String
+  title       String
+  description String?
+  event_date  DateTime?
+  
+  qr_slug     String    @unique @default(uuid())
+  
+  is_private  Boolean   @default(false)
+  
+  items       Item[]
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  wishlist_id String
+  
+  name        String
+  description String?
+  price       Decimal? @db.Decimal(10, 2)
+  currency    String   @default("UAH")
+  imageUrl    String?
+  
+  source_url  String?
+  is_parsed   Boolean  @default(false)
+
+  wishlist    Wishlist @relation(fields: [wishlist_id], references: [id], onDelete: Cascade)
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model FeatureFlag {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  is_enabled  Boolean  @default(false)
+  description String?
+  
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model GlobalSettings {
+  id            String   @id @default(cuid())
+  allowed_sites Json     @default("[]") // [{ domain: "site.com", freshness_days: 7 }]
+  
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 }

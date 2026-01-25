@@ -1,13 +1,16 @@
 {
   "extends": "@wishy/tsconfig/base.json",
   "compilerOptions": {
+    "strict": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
     "outDir": "dist",
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
+      "@api/generated/*": ["generated/*"],
       "@api/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "prisma/**/*", "generated/**/*"]
 }
