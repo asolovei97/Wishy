@@ -1,0 +1,10 @@
+{
+  "extends": "@wishy/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "jsx": "react-native"
+  }
+}
