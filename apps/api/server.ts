@@ -1,5 +1,6 @@
 import app from "./app";
 import { prisma } from "./src";
+import { startItemUpdateWorker } from "./src/workers/itemUpdate";
 
 process.on("uncaughtException", (err) => {
   console.error(err.name, err.message);
@@ -16,6 +17,9 @@ const startServer = async () => {
 
     const server = app.listen(port, () => {
       console.log(`App running on port ${port}...`);
+
+      // Start background workers
+      startItemUpdateWorker();
     });
 
     process.on("unhandledRejection", (err) => {

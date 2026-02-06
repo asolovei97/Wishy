@@ -6,7 +6,7 @@ import { QueryFeatures } from "@api/lib/queryFeatures";
 
 class WishlistHandler extends BaseAuthHandler {
   public create = this.catch(async (req: Request, res: Response) => {
-    const { userId } = (req as any).user;
+    const { userId } = (req as any).user || {};
     const { title, description, event_date, is_private } = req.body;
 
     const wishlist = await prisma.wishlist.create({
@@ -26,28 +26,22 @@ class WishlistHandler extends BaseAuthHandler {
   });
 
   public getAll = this.catch(async (req: Request, res: Response) => {
-    const { userId } = (req as any).user;
+    const { userId } = (req as any).user || {};
 
     console.log(userId);
-  
+
     const queryBuilder = new QueryFeatures({}, req.query)
-        .filter()
-        .sort()
-        .paginate();
+      .filter()
+      .sort()
+      .paginate();
 
     const securityCondition = {
-      OR: [
-        { is_private: false },
-        { user_id: userId }
-      ]
+      OR: [{ is_private: false }, { user_id: userId }],
     };
 
     // Safely merge security condition with filters from query
     queryBuilder.query.where = {
-      AND: [
-        queryBuilder.query.where || {},
-        securityCondition
-      ]
+      AND: [queryBuilder.query.where || {}, securityCondition],
     };
 
     const wishlists = await prisma.wishlist.findMany(queryBuilder.query);
@@ -60,17 +54,14 @@ class WishlistHandler extends BaseAuthHandler {
   });
 
   public getOne = this.catch(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    
+    const { id } = (req.params as { id: string }) || {};
+
     const { userId } = (req as any).user;
 
     const wishlist = await prisma.wishlist.findFirst({
       where: {
         id,
-        OR: [
-          { is_private: false },
-          { user_id: userId }
-        ]
+        OR: [{ is_private: false }, { user_id: userId }],
       },
       include: { items: true },
     });
@@ -86,9 +77,9 @@ class WishlistHandler extends BaseAuthHandler {
   });
 
   public update = this.catch(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = (req.params as { id: string }) || {};
     const { userId } = (req as any).user;
-    
+
     const wishlist = await prisma.wishlist.findUnique({ where: { id } });
 
     if (!wishlist) return wishlistError.notFound();
@@ -106,7 +97,7 @@ class WishlistHandler extends BaseAuthHandler {
   });
 
   public delete = this.catch(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { id } = (req.params as { id: string }) || {};
     const { userId } = (req as any).user;
 
     const wishlist = await prisma.wishlist.findUnique({ where: { id } });
