@@ -5,7 +5,6 @@ import { Request, Response } from "express";
 class UserHandler extends BaseUserHandler  {
     public getCurrentUser = this.catch(async (req: Request, res: Response) => {
         const { userId } = (req as any).user;
-        console.log(userId)
         const user = await this.findByUserId(userId);
 
         if(!user) {
