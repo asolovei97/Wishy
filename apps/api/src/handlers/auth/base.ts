@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { comparePassword, generateToken, hashPassword } from "@api/lib/auth";
 import { prisma } from "@api/lib/prisma/client";
 import { DateTime } from "luxon";
+import { BaseHandler } from "../base";
 
-export abstract class BaseAuthHandler {
+export abstract class BaseAuthHandler extends BaseHandler {
   protected createSendToken = (user: any, statusCode: number, res: Response) => {
     const token = this.generateToken({
       userId: user.id,
@@ -22,7 +23,6 @@ export abstract class BaseAuthHandler {
 
     res.status(statusCode).json({
       status: "success",
-      user: this.formatUserResponse(user),
     });
   };
 
@@ -32,13 +32,6 @@ export abstract class BaseAuthHandler {
       httpOnly: true,
     });
     res.status(200).json({ status: "success" });
-  };
-  protected ok = <T>(res: Response, data: T) => {
-    return res.status(200).json(data);
-  };
-
-  protected created = <T>(res: Response, data: T) => {
-    return res.status(201).json(data);
   };
 
   protected hashPassword = async (password: string) => {
@@ -66,29 +59,5 @@ export abstract class BaseAuthHandler {
         },
       },
     });
-  };
-
-  protected formatUserResponse = (user: {
-    id: string;
-    email: string;
-    role: string;
-  }) => {
-    return {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-    };
-  };
-
-  public catch = (
-    handler: (req: Request, res: Response, next: NextFunction) => Promise<any>
-  ) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        await handler(req, res, next);
-      } catch (error) {
-        next(error);
-      }
-    };
   };
 }

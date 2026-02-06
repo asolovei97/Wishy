@@ -47,6 +47,14 @@ class BaseAuthErrorHandler {
     throw new AuthError(this.errors.INVALID_PROVIDER, 400);
   };
 
+  public invalidCredentials = (): never => {
+    throw new AuthError(this.errors.INVALID_CREDENTIALS, 401);
+  };
+
+  public noLocalAccount = (): never => {
+    throw new AuthError(this.errors.NO_LOCAL_ACCOUNT, 400);
+  };
+
   public fail = (error: string | Error): never => {
     if (typeof error === "string") {
       throw new AppError(error, 500);
