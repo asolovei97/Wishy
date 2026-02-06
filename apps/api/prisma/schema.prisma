@@ -1,11 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -75,8 +74,27 @@ model Item {
   source_url  String?
   is_parsed   Boolean  @default(false)
 
+  parsed_item_id String?
+  parsed_item    ParsedItem? @relation(fields: [parsed_item_id], references: [id])
+
   wishlist    Wishlist @relation(fields: [wishlist_id], references: [id], onDelete: Cascade)
 
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model ParsedItem {
+  id          String   @id @default(cuid())
+  source_url  String   @unique
+  
+  name        String
+  description String?
+  price       Decimal? @db.Decimal(10, 2)
+  currency    String   @default("UAH")
+  imageUrl    String?
+  
+  items       Item[]
+  
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 }

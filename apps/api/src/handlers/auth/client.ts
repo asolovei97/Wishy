@@ -119,6 +119,44 @@ class ClientAuthHandler extends BaseAuthHandler {
 
     return this.createSendToken(user, 200, res);
   };
+
+  public updatePassword = this.catch(async (req: Request, res: Response) => {
+    const { userId: id } = (req as any).user;
+    const { current_password, new_password } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        accounts: {
+          where: { provider: "local" },
+        },
+      },
+    });
+
+    if (!user || !user.accounts[0] || !user.accounts[0].password_hash) {
+      return authHandleError.noLocalAccount();
+    }
+
+    const isValid = await this.comparePassword(
+      current_password,
+      user.accounts[0].password_hash
+    );
+
+    if (!isValid) {
+      return authHandleError.invalidCredentials();
+    }
+
+    const hashedPassword = await this.hashPassword(new_password);
+
+    await prisma.account.update({
+      where: { id: user.accounts[0].id },
+      data: {
+        password_hash: hashedPassword,
+      },
+    });
+
+    return this.createSendToken(user, 200, res);
+  });
 }
 
 export const clientAuthHandler = new ClientAuthHandler();
