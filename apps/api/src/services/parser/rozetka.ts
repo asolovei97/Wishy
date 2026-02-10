@@ -73,7 +73,7 @@ export class RozetkaParserService implements ParserService {
             
         const currency = offers?.priceCurrency || "UAH";
         
-        const imageUrl = 
+        const image_url = 
             product?.image || 
             document.querySelector('head')?.querySelector('meta[property="og:image"]')?.getAttribute('content') || 
             document.querySelector('.product-photo__picture')?.getAttribute('src') || 
@@ -89,7 +89,7 @@ export class RozetkaParserService implements ParserService {
             name,
             price: parseFloat(priceStr) || 0,
             currency,
-            imageUrl,
+            image_url,
             description: description ? description.substring(0, 1000) : "",
         };
       });

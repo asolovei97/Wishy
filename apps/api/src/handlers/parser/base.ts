@@ -7,7 +7,7 @@ export abstract class  BaseParserHandler extends BaseHandler{
             name: product.name,
             price: product.price,
             currency: product.currency,
-            image_url: product.imageUrl,
+            image_url: product.image_url,
             description: product.description,
             source_url: product.source_url,
         };

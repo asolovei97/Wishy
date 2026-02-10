@@ -91,7 +91,7 @@ model ParsedItem {
   description String?
   price       Decimal? @db.Decimal(10, 2)
   currency    String   @default("UAH")
-  imageUrl    String?
+  image_url    String?
   
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
@@ -99,6 +99,8 @@ model ParsedItem {
   last_checked_at   DateTime?
   check_status      String? 
   check_error_count Int       @default(0)
+
+  items   Item[]
 }
 
 model AdminNotification {

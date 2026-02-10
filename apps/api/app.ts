@@ -36,7 +36,7 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again in an hour!",
 });
 
-app.use("/api", limiter);
+app.use("/", limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
@@ -48,8 +48,8 @@ app.use(xss());
 // app.use(express.static(`${__dirname}/public`));
 
 // Main Routes
-app.use("/api/v1", adminRouter);
-app.use("/api/v1", clientRouter);
+app.use("/manage", adminRouter);
+app.use("/", clientRouter);
 
 app.get("/health", async (req, res) => {
   try {
