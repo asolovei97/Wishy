@@ -10,27 +10,26 @@ Wishy — це сучасна екосистема для створення т�
 
 ### Core
 *   **Monorepo Tools:** [Turborepo](https://turbo.build/)
-*   **Package Manager:** [Bun](https://bun.sh/) (або npm/yarn/pnpm)
+*   **Package Manager:** [Bun](https://bun.sh/)
 
 ### Backend
-*   **Framework:** Node.js (NestJS або Fastify)
+*   **Framework:** Node.js (Express JS)
 *   **Database:** PostgreSQL
 *   **ORM:** Prisma
 
 ### Frontend (Client)
-*   **Framework:** Next.js (React)
+*   **Framework:** Next.js
 *   **Language:** TypeScript
-*   **Styling:** Tailwind CSS / CSS Modules
+*   **Styling:** Tailwind CSS
 
 ### Mobile
 *   **Framework:** React Native (Expo)
 
 ### Admin Dashboard
-*   **Framework:** React (Vite) або Next.js section
+*   **Framework:** React (Vite)
 
 ### Shared
 *   **Validation:** Zod
-*   **Types:** TypeScript Shared Intefaces
 
 ---
 
