@@ -1,6 +1,9 @@
 {
   "extends": "@wishy/tsconfig/nextjs.json",
   "compilerOptions": {
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
