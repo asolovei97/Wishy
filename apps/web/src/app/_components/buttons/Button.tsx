@@ -1,6 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import React, { ComponentPropsWithoutRef, ReactNode } from "react";
-import { cn } from "../_lib";
+import { cn } from "../../_lib";
 import Link from "next/link";
 
 const buttonVariants = cva(
@@ -30,7 +30,7 @@ const buttonVariants = cva(
 
 interface ButtonProps
   extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
-  icon?: ReactNode;
+  Icon?: ReactNode;
 }
 
 export const Button = ({
@@ -38,7 +38,7 @@ export const Button = ({
   size,
   className,
   children,
-  icon,
+  Icon,
   ...props
 }: ButtonProps) => {
   return (
@@ -46,7 +46,7 @@ export const Button = ({
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
-      {icon ? <span>icon</span> : null}
+      {Icon ? Icon : null}
       {children}
     </button>
   );
@@ -54,8 +54,7 @@ export const Button = ({
 
 interface LinkProps
   extends React.ComponentProps<"a">, VariantProps<typeof buttonVariants> {
-  icon?: ReactNode;
-  isLink?: boolean;
+  Icon?: ReactNode;
 }
 
 export const ButtonLink = ({
@@ -63,7 +62,7 @@ export const ButtonLink = ({
   size,
   className,
   children,
-  icon,
+  Icon,
   href = "#",
   ...props
 }: LinkProps) => {
@@ -73,7 +72,7 @@ export const ButtonLink = ({
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
-      {icon ? <span>icon</span> : null}
+      {Icon ? Icon : null}
       {children}
     </Link>
   );

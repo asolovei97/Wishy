@@ -3,6 +3,7 @@ import { cn } from "../_lib";
 
 const textColors = {
   "stone-800": "text-stone-800",
+  "stone-900": "text-stone-900",
   white: "text-white",
 } as const;
 
@@ -32,14 +33,13 @@ const BaseText = <T extends TextTags>({
 
   const Component: ElementType = Tag;
 
-  console.log(color);
-
   return (
-    <Component className={cn(className, textColors[color])} {...props}>
+    <Component className={cn(textColors[color], className)} {...props}>
       {children}
     </Component>
   );
 };
+
 
 interface HeadingProps extends Omit<
   ComponentPropsWithoutRef<HeadingTags>,
