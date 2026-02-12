@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+
 import { Logo } from "./Logo";
-import { Navigation } from "./navigation";
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
+import { Navigation, MobileNavigation } from "./navigation";
+import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { FiMenu, FiX } from "react-icons/fi";
+import { cn } from "@/app/_lib";
 
 interface HeaderProps {}
 
 export const Header = ({}: HeaderProps) => {
   const { scrollY } = useScroll();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleRef = useRef<HTMLButtonElement>(null);
   
   const paddingY = useTransform(scrollY, [0, 100], ["24px", "4px"]);
   const backgroundColor = useTransform(
@@ -33,7 +39,30 @@ export const Header = ({}: HeaderProps) => {
       }}
     >
       <Logo isMinimized={isMinimized} />
-      <Navigation isMinimized={isMinimized} />
+      
+      <div className="hidden md:flex">
+        <Navigation isMinimized={isMinimized} />
+      </div>
+
+      <div className="flex md:hidden relative items-center">
+        <button
+          ref={toggleRef}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className={cn(
+            "size-10 flex items-center justify-center rounded-full transition-all text-stone-900 border border-stone-200",
+            isMobileMenuOpen ? "bg-stone-100" : "bg-white"
+          )}
+        >
+          {isMobileMenuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+        </button>
+        <MobileNavigation 
+          isOpen={isMobileMenuOpen} 
+          onClose={() => setIsMobileMenuOpen(false)}
+          toggleRef={toggleRef}
+        />
+      </div>
     </motion.header>
   );
 };
+
+

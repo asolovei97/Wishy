@@ -14,9 +14,15 @@ const Trigger = ({ children }: PropsWithChildren) => {
   return <div onClick={handleToggle}>{children}</div>;
 };
 
+import { useRef } from "react";
+import { useClickOutside } from "@/app/_hooks/useOutsideClick";
+
 const ModalContent = ({ children }: PropsWithChildren) => {
   const { isOpen, handleToggle } = useModalContext();
   const [mounted, setMounted] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside([contentRef], handleToggle, isOpen);
 
   useEffect(() => {
     setMounted(true);
@@ -28,14 +34,17 @@ const ModalContent = ({ children }: PropsWithChildren) => {
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 transition-opacity">
-      <div className="fixed inset-0" onClick={handleToggle} />
-      <div className="relative z-50 flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-xl bg-white shadow-2xl animate-in fade-in zoom-in duration-200">
+      <div 
+        ref={contentRef}
+        className="relative z-50 flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-xl bg-white shadow-2xl animate-in fade-in zoom-in duration-200"
+      >
         {children}
       </div>
     </div>,
     document.body
   );
 };
+
 
 const Header = ({ children }: PropsWithChildren) => {
   const { handleToggle } = useModalContext();

@@ -6,18 +6,20 @@ import { NavigationLink } from "../buttons";
 import { ButtonLink } from "../buttons/Button";
 import { cn } from "@/app/_lib";
 import { links, profileLink } from "./config.tsx";
+import { usePathname } from "next/navigation";
 
 interface NavigationProps {
-  activePage?: string;
   isAuthenticated?: boolean;
   isMinimized?: boolean;
 }
 
-export const Navigation = ({ activePage = "/", isAuthenticated = false, isMinimized = false }: NavigationProps) => {
+export const Navigation = ({ isAuthenticated = false, isMinimized = false }: NavigationProps) => {
+  const pathname = usePathname();
+
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 
   // The pill is either on the hovered tab or the active page
-  const activePillTab = hoveredTab || activePage;
+  const activePillTab = hoveredTab || pathname;
 
   return (
     <div className="flex items-center gap-3">
@@ -58,7 +60,7 @@ export const Navigation = ({ activePage = "/", isAuthenticated = false, isMinimi
               <NavigationLink
                 href={tab.href}
                 isActive={isHighlighted}
-                isCurrentPage={tab.href === activePage}
+                isCurrentPage={tab.href ===  pathname}
                 isMinimized={isMinimized}
                 index={idx}
                 Icon={tab.icon}
@@ -94,7 +96,7 @@ export const Navigation = ({ activePage = "/", isAuthenticated = false, isMinimi
             <NavigationLink
               href={profileLink.href}
               isActive={activePillTab === profileLink.href}
-              isCurrentPage={activePage === profileLink.href}
+              isCurrentPage={pathname === profileLink.href}
               isMinimized={isMinimized}
               index={99}
               Icon={profileLink.icon}

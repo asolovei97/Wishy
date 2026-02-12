@@ -57,7 +57,7 @@ export const NavigationLink = ({
             transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
             className="flex items-center gap-2"
           >
-             {Icon ? Icon : null}
+             {Icon}
              {children}
           </motion.div>
         )}
